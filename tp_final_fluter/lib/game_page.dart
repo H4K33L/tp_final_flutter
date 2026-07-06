@@ -1,3 +1,4 @@
+import 'package:camera_platform_interface/src/types/camera_description.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tp_final_fluter/game_page_widget/finished_widget.dart';
@@ -6,13 +7,15 @@ import 'package:tp_final_fluter/game_page_widget/result_widjet.dart';
 import 'package:tp_final_fluter/game_page_widget/starting_widget.dart';
 import 'package:tp_final_fluter/game_page_widget/voting_widjet.dart';
 import 'package:tp_final_fluter/game_page_widget/waiting_widget.dart';
+import 'package:id_gen/id_gen.dart';
 
 class GamePage extends StatelessWidget {
-  const GamePage({super.key, required this.title, required this.id, required this.userName});
+  const GamePage({super.key, required this.title, required this.id, required this.userName, required this.camera});
 
   final String title;
   final String id;
   final String userName;
+  final CameraDescription camera;
 @override
   Widget build(BuildContext context) {
     final colorScheme = ColorScheme.fromSeed(seedColor: Colors.deepPurple);
@@ -30,21 +33,28 @@ class GamePage extends StatelessWidget {
           centerTitle: true,
         ),
       ),
-      home: _GamePage(title: title, id: id, userName: userName,),
+      home: _GamePage(title: title, id: id, userName: userName, camera: camera,),
     );
   }
 }
 
 class _GamePage extends ConsumerWidget  {
-  const _GamePage({required this.title, required this.id, required this.userName});
+  const _GamePage({required this.title, required this.id, required this.userName, required this.camera});
   final String title;
   final String userName;
   final String id;
+  final CameraDescription camera;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(gameControlerProvider);
     final notifier = ref.read(gameControlerProvider.notifier);
+    String idRoom = '';
+    if (id == '0'){
+      idRoom = UuidV4Gen().get();
+    } else {
+      idRoom = id;
+    }
 
     notifier.joinOrCreateRoom(id, userName);
 
@@ -66,7 +76,7 @@ class _GamePage extends ConsumerWidget  {
             // status: (params) => methode
             waiting: () =>  WaitingWidget(),
             starting: () => StartingWidget(),
-            playing: () => PlayingWidget(),
+            playing: () => PlayingWidget(id: idRoom, camera: camera,),
             voting: () => VotingWidget(),
             results: () => ResultsWidget(),
             finished: () => FinishedWidget(),
