@@ -1,8 +1,5 @@
 import 'package:camera/camera.dart';
-<<<<<<< HEAD
-=======
 import 'package:flutter/material.dart';
->>>>>>> main
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
