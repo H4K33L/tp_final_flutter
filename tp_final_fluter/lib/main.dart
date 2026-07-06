@@ -1,14 +1,20 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tp_final_fluter/firebase_options.dart';
 import 'package:tp_final_fluter/game_page.dart';
+import 'package:tp_final_fluter/models/player/player.dart';
 import 'package:tp_final_fluter/not_found_page.dart';
-import 'package:tp_final_fluter/providers/roomRepository.dart';
 import 'package:tp_final_fluter/providers/storageRepository.dart';
+import 'package:tp_final_fluter/services/player_service.dart';
+import 'package:tp_final_fluter/services/room_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  var cameras = await availableCameras();
+  final firstCamera = cameras.first;
   await Firebase.initializeApp(
     options:DefaultFirebaseOptions.currentPlatform,
   );
@@ -16,7 +22,7 @@ void main() async {
     child: MaterialApp(
       title: "test",
       home: Scaffold(
-        body: RoomScreen(),
+        body: PlayerScreen(),
       )
     )));
 }
@@ -40,6 +46,24 @@ class RoomScreen extends ConsumerWidget {
       loading: () => const CircularProgressIndicator(),
       error: (e, st) => Text('Erreur: $e'),
     );
+  }
+}
+
+class PlayerScreen extends ConsumerWidget {
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: implement build
+    final provider = ref.watch(playerRepositoryProvider);
+    provider.createPlayer(idRoom: "ABC", player: Player(
+      id:"zer",
+      displayName: "azerty",
+      isHost:false,
+      isReady : false,
+      isSpectator: false,
+    ));
+    provider.getPlayersByRoom(idRoom: "ABC");
+    return Text("hi");
   }
 }
 

@@ -10,7 +10,6 @@ abstract class Player with _$Player {
     required String displayName,
     required bool isHost,
     required bool isReady,
-    required bool canCapture,
     required bool isSpectator,
     @Default(0) int totalScore,
   }) = _Player;

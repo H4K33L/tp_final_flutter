@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tp_final_fluter/models/testRoom.dart';
-
-final firestoreProvider = Provider<FirebaseFirestore>((ref) => FirebaseFirestore.instance);
+import 'package:tp_final_fluter/services/auth_provider.dart';
 
 final roomRepositoryProvider = Provider((ref) => RoomRepository(ref.watch(firestoreProvider)));
 
@@ -42,4 +41,3 @@ class RoomRepository {
     return List.generate(6, (i) => chars[(rnd + i * 7) % chars.length]).join();
   }
 }
-
