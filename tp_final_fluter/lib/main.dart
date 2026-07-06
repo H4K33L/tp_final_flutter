@@ -7,7 +7,7 @@ import 'package:tp_final_fluter/not_found_page.dart';
 
 void main() async {
   await Firebase.initializeApp(
-    options:DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,24 +19,30 @@ void main() async {
   runApp(MyApp(camera: firstCamera,));
 }
 
+
 class MyApp extends StatelessWidget {
   final CameraDescription camera;
 
   const MyApp({super.key, required this.camera});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'snap_theme',
+      debugShowCheckedModeBanner: false,
       routes: {
-      '/': (context) => MyHomePage(title: 'snap_theme main page',),
+        '/': (context) => const MyHomePage(title: 'snap_theme main page'),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/game') {
-          final args = ModalRoute.of(context)!.settings.arguments as GameRouteArgumment;
+          final args = settings.arguments as GameRouteArgumment;
           return MaterialPageRoute(
-            builder: (context) => GamePage(id: args.id, title: 'snap_theme game page', userName: args.username, camera: camera),
+            builder: (context) => GamePage(
+              id: args.id,
+              title: 'snap_theme game page',
+              userName: args.username,
+              camera: camera,
+            ),
           );
         }
         return null;
@@ -45,7 +51,7 @@ class MyApp extends StatelessWidget {
         return MaterialPageRoute(builder: (context) => NotFoundPage());
       },
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     );
   }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Player {
 
-@JsonKey(includeToJson: false) String get id; String get displayName; bool get isHost; bool get isReady; bool get canCapture; bool get isSpectator; int get totalScore;
+@JsonKey(includeToJson: false) String get id; String get displayName; bool get isHost; bool get isReady; bool get isSpectator; int get totalScore;
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PlayerCopyWith<Player> get copyWith => _$PlayerCopyWithImpl<Player>(this as Pla
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Player&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.isHost, isHost) || other.isHost == isHost)&&(identical(other.isReady, isReady) || other.isReady == isReady)&&(identical(other.canCapture, canCapture) || other.canCapture == canCapture)&&(identical(other.isSpectator, isSpectator) || other.isSpectator == isSpectator)&&(identical(other.totalScore, totalScore) || other.totalScore == totalScore));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Player&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.isHost, isHost) || other.isHost == isHost)&&(identical(other.isReady, isReady) || other.isReady == isReady)&&(identical(other.isSpectator, isSpectator) || other.isSpectator == isSpectator)&&(identical(other.totalScore, totalScore) || other.totalScore == totalScore));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,isHost,isReady,canCapture,isSpectator,totalScore);
+int get hashCode => Object.hash(runtimeType,id,displayName,isHost,isReady,isSpectator,totalScore);
 
 @override
 String toString() {
-  return 'Player(id: $id, displayName: $displayName, isHost: $isHost, isReady: $isReady, canCapture: $canCapture, isSpectator: $isSpectator, totalScore: $totalScore)';
+  return 'Player(id: $id, displayName: $displayName, isHost: $isHost, isReady: $isReady, isSpectator: $isSpectator, totalScore: $totalScore)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PlayerCopyWith<$Res>  {
   factory $PlayerCopyWith(Player value, $Res Function(Player) _then) = _$PlayerCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String displayName, bool isHost, bool isReady, bool canCapture, bool isSpectator, int totalScore
+@JsonKey(includeToJson: false) String id, String displayName, bool isHost, bool isReady, bool isSpectator, int totalScore
 });
 
 
@@ -65,13 +65,12 @@ class _$PlayerCopyWithImpl<$Res>
 
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? isHost = null,Object? isReady = null,Object? canCapture = null,Object? isSpectator = null,Object? totalScore = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? displayName = null,Object? isHost = null,Object? isReady = null,Object? isSpectator = null,Object? totalScore = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,isHost: null == isHost ? _self.isHost : isHost // ignore: cast_nullable_to_non_nullable
 as bool,isReady: null == isReady ? _self.isReady : isReady // ignore: cast_nullable_to_non_nullable
-as bool,canCapture: null == canCapture ? _self.canCapture : canCapture // ignore: cast_nullable_to_non_nullable
 as bool,isSpectator: null == isSpectator ? _self.isSpectator : isSpectator // ignore: cast_nullable_to_non_nullable
 as bool,totalScore: null == totalScore ? _self.totalScore : totalScore // ignore: cast_nullable_to_non_nullable
 as int,
@@ -159,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String displayName,  bool isHost,  bool isReady,  bool canCapture,  bool isSpectator,  int totalScore)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String displayName,  bool isHost,  bool isReady,  bool isSpectator,  int totalScore)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Player() when $default != null:
-return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.canCapture,_that.isSpectator,_that.totalScore);case _:
+return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.isSpectator,_that.totalScore);case _:
   return orElse();
 
 }
@@ -180,10 +179,10 @@ return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.canC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String displayName,  bool isHost,  bool isReady,  bool canCapture,  bool isSpectator,  int totalScore)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(includeToJson: false)  String id,  String displayName,  bool isHost,  bool isReady,  bool isSpectator,  int totalScore)  $default,) {final _that = this;
 switch (_that) {
 case _Player():
-return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.canCapture,_that.isSpectator,_that.totalScore);case _:
+return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.isSpectator,_that.totalScore);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +199,10 @@ return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.canC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String displayName,  bool isHost,  bool isReady,  bool canCapture,  bool isSpectator,  int totalScore)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(includeToJson: false)  String id,  String displayName,  bool isHost,  bool isReady,  bool isSpectator,  int totalScore)?  $default,) {final _that = this;
 switch (_that) {
 case _Player() when $default != null:
-return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.canCapture,_that.isSpectator,_that.totalScore);case _:
+return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.isSpectator,_that.totalScore);case _:
   return null;
 
 }
@@ -215,14 +214,13 @@ return $default(_that.id,_that.displayName,_that.isHost,_that.isReady,_that.canC
 @JsonSerializable()
 
 class _Player implements Player {
-  const _Player({@JsonKey(includeToJson: false) required this.id, required this.displayName, required this.isHost, required this.isReady, required this.canCapture, required this.isSpectator, this.totalScore = 0});
+  const _Player({@JsonKey(includeToJson: false) required this.id, required this.displayName, required this.isHost, required this.isReady, required this.isSpectator, this.totalScore = 0});
   factory _Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
 
 @override@JsonKey(includeToJson: false) final  String id;
 @override final  String displayName;
 @override final  bool isHost;
 @override final  bool isReady;
-@override final  bool canCapture;
 @override final  bool isSpectator;
 @override@JsonKey() final  int totalScore;
 
@@ -239,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Player&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.isHost, isHost) || other.isHost == isHost)&&(identical(other.isReady, isReady) || other.isReady == isReady)&&(identical(other.canCapture, canCapture) || other.canCapture == canCapture)&&(identical(other.isSpectator, isSpectator) || other.isSpectator == isSpectator)&&(identical(other.totalScore, totalScore) || other.totalScore == totalScore));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Player&&(identical(other.id, id) || other.id == id)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.isHost, isHost) || other.isHost == isHost)&&(identical(other.isReady, isReady) || other.isReady == isReady)&&(identical(other.isSpectator, isSpectator) || other.isSpectator == isSpectator)&&(identical(other.totalScore, totalScore) || other.totalScore == totalScore));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,displayName,isHost,isReady,canCapture,isSpectator,totalScore);
+int get hashCode => Object.hash(runtimeType,id,displayName,isHost,isReady,isSpectator,totalScore);
 
 @override
 String toString() {
-  return 'Player(id: $id, displayName: $displayName, isHost: $isHost, isReady: $isReady, canCapture: $canCapture, isSpectator: $isSpectator, totalScore: $totalScore)';
+  return 'Player(id: $id, displayName: $displayName, isHost: $isHost, isReady: $isReady, isSpectator: $isSpectator, totalScore: $totalScore)';
 }
 
 
@@ -259,7 +257,7 @@ abstract mixin class _$PlayerCopyWith<$Res> implements $PlayerCopyWith<$Res> {
   factory _$PlayerCopyWith(_Player value, $Res Function(_Player) _then) = __$PlayerCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(includeToJson: false) String id, String displayName, bool isHost, bool isReady, bool canCapture, bool isSpectator, int totalScore
+@JsonKey(includeToJson: false) String id, String displayName, bool isHost, bool isReady, bool isSpectator, int totalScore
 });
 
 
@@ -276,13 +274,12 @@ class __$PlayerCopyWithImpl<$Res>
 
 /// Create a copy of Player
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = null,Object? isHost = null,Object? isReady = null,Object? canCapture = null,Object? isSpectator = null,Object? totalScore = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? displayName = null,Object? isHost = null,Object? isReady = null,Object? isSpectator = null,Object? totalScore = null,}) {
   return _then(_Player(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,isHost: null == isHost ? _self.isHost : isHost // ignore: cast_nullable_to_non_nullable
 as bool,isReady: null == isReady ? _self.isReady : isReady // ignore: cast_nullable_to_non_nullable
-as bool,canCapture: null == canCapture ? _self.canCapture : canCapture // ignore: cast_nullable_to_non_nullable
 as bool,isSpectator: null == isSpectator ? _self.isSpectator : isSpectator // ignore: cast_nullable_to_non_nullable
 as bool,totalScore: null == totalScore ? _self.totalScore : totalScore // ignore: cast_nullable_to_non_nullable
 as int,
