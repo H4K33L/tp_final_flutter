@@ -6,8 +6,20 @@ class ResultsWidget extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final winner = "aurelien";
     
-    // TODO: implement build
-    throw UnimplementedError();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(''),
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Text("And the winner is .... $winner"),
+          ],
+        )
+      )
+    );
   }
 }

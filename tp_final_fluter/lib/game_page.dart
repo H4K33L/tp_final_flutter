@@ -7,8 +7,10 @@ import 'package:tp_final_fluter/models/room/room.dart';
 import 'package:tp_final_fluter/models/round/round.dart';
 import 'package:tp_final_fluter/game_page_widget/finished_widget.dart';
 import 'package:tp_final_fluter/game_page_widget/playing_widget.dart';
+import 'package:tp_final_fluter/game_page_widget/voting_widget.dart';
 import 'package:tp_final_fluter/game_page_widget/starting_widget.dart';
 import 'package:tp_final_fluter/game_page_widget/waiting_widget.dart';
+import 'package:tp_final_fluter/game_page_widget/result_widget.dart';
 
 class GamePage extends ConsumerStatefulWidget {
   const GamePage({
@@ -74,7 +76,6 @@ class _GamePageState extends ConsumerState<GamePage> {
   }
 }
 
-/// Niveau 1 : route sur RoomStatus (waiting, starting, playing, results, finished)
 class RoomRouter extends ConsumerWidget {
   const RoomRouter({required this.roomId, required this.camera, required this.themeName ,super.key});
   final String roomId;
@@ -93,7 +94,7 @@ class RoomRouter extends ConsumerWidget {
         return switch (room.status) {
           RoomStatus.waiting  => WaitingWidget(roomId: roomId),
           RoomStatus.starting => StartingWidget(roomId: roomId),
-          RoomStatus.playing  => RoundRouter(roomId: roomId, camera: camera),
+          RoomStatus.playing  => RoundRouter(roomId: roomId, camera: camera, themeName: themeName),
           RoomStatus.results  => ResultsWidget(roomId: roomId),
           RoomStatus.finished => FinishedWidget(roomId: roomId),
         };
@@ -123,7 +124,7 @@ class RoundRouter extends ConsumerWidget {
         }
         return switch (round.status) {
           RoundStatus.capturing => PlayingWidget(id: roomId, camera: camera, themeName: themeName),
-          RoundStatus.voting    => VotingWidget(roomId: roomId),
+          RoundStatus.voting    => VotingGallery(roomId: roomId, roundNumber: int.parse(round.id)),
           RoundStatus.closed    => const Center(child: CircularProgressIndicator()),
         };
       },

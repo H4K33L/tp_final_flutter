@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
               id: args.id,
               title: 'snap_theme game page',
               userName: args.username,
-              camera: camera,
+              camera: camera, themeName: '',
             ),
           );
         }

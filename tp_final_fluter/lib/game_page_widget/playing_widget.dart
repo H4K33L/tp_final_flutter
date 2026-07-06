@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:tp_final_fluter/providers/storageRepository.dart';
 import 'package:tp_final_fluter/providers/auth_providers.dart';
-import 'package:tp_final_fluter/providers/auth_providers.dart';
 import 'package:tp_final_fluter/providers/round_providers.dart';
 import 'package:tp_final_fluter/providers/room_providers.dart';
 
