@@ -1,15 +1,48 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tp_final_fluter/firebase_options.dart';
 import 'package:tp_final_fluter/game_page.dart';
 import 'package:tp_final_fluter/not_found_page.dart';
+import 'package:tp_final_fluter/providers/roomRepository.dart';
+import 'package:tp_final_fluter/providers/storageRepository.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options:DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(ProviderScope(
+    child: MaterialApp(
+      title: "test",
+      home: Scaffold(
+        body: RoomScreen(),
+      )
+    )));
 }
+
+class RoomScreen extends ConsumerWidget {
+  //final String code;
+  //const RoomScreen({required this.code, super.key});
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final storage = ref.watch(storageRepositoryProvider);
+    final provider = ref.watch(roomStreamProvider("ABC"));
+    final url = storage.uploadImageFromUrl(
+      imageUrl: 'https://preview.redd.it/just-a-random-picture-that-ive-taken-in-barcelona-v0-lvtkrfbkdwof1.jpeg?width=640&crop=smart&auto=webp&s=6e632273ff13db8fd640a5553f2d8cb9e8c5c496',
+      path: 'images/ABC/cover.jpg',
+    );
+
+    return provider.when(
+      data: (room) => room == null
+          ? const Text('Room introuvable')
+          : Text('Room ${room.code} - ${room.hostId}'),
+      loading: () => const CircularProgressIndicator(),
+      error: (e, st) => Text('Erreur: $e'),
+    );
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
