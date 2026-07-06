@@ -6,8 +6,42 @@ class WaitingWidget extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
-    throw UnimplementedError();
+
+    // ajouter condition pour admin room
+    // if () {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(''),
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            for(String item in list) Text(item);
+            FlatButton(
+              onPressed: () { },
+              child: Text('Launch party'),
+            );
+          ],
+        )
+      )
+    );
+    // } else {
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text(''),
+    //     elevation: 0,
+    //   ),
+    //   body: SafeArea(
+    //     child: Column(
+    //       children: [
+    //      for(String item in list) Text(item);
+    //      Text: 'Waiting the host to start'
+    //       ],
+    //     )
+    //   )
+    // );
+    // }
   }
   
 }
