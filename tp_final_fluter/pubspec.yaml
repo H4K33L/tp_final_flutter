@@ -35,7 +35,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   firebase_core: ^4.11.0
-  firebase_auth: ^6.1.0
   cloud_firestore: ^6.1.0
 
   path_provider: ^2.1.6
@@ -49,6 +48,9 @@ dependencies:
   flutter_timer_countdown: ^1.0.7
   
   firebase_storage: ^13.0.5
+  firebase_auth: ^6.5.4
+  camera_platform_interface: ^2.13.0
+  id_gen: ^0.7.8
 
 dev_dependencies:
   flutter_test:

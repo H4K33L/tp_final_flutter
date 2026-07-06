@@ -6,8 +6,38 @@ class StartingWidget extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
-    throw UnimplementedError();
+    final roundThemeControler = TextEditingController();
+
+    // ajouter condition pour admin room
+    // if () {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(''),
+        elevation: 0,
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            TextField(controller: roundThemeControler),
+          ],
+        )
+      )
+    );
+    // } else {
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text(''),
+    //     elevation: 0,
+    //   ),
+    //   body: SafeArea(
+    //     child: Column(
+    //       children: [
+    //      for(String item in list) Text(item);
+    //      Text: 'Waiting the 
+    //       ],
+    //     )
+    //   )
+    // );
+    // }
   }
-  
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tp_final_fluter/models/player/player.dart';
 import 'package:tp_final_fluter/services/auth_provider.dart';
+import 'package:tp_final_fluter/services/firestore.dart';
 
 final playerRepositoryProvider = Provider((ref) => PlayerRepository(ref.watch(firestoreProvider)));
 
