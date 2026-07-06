@@ -1,0 +1,26 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'player.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_Player _$PlayerFromJson(Map<String, dynamic> json) => _Player(
+  id: json['id'] as String,
+  displayName: json['displayName'] as String,
+  isHost: json['isHost'] as bool,
+  isReady: json['isReady'] as bool,
+  canCapture: json['canCapture'] as bool,
+  isSpectator: json['isSpectator'] as bool,
+  totalScore: (json['totalScore'] as num?)?.toInt() ?? 0,
+);
+
+Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
+  'displayName': instance.displayName,
+  'isHost': instance.isHost,
+  'isReady': instance.isReady,
+  'canCapture': instance.canCapture,
+  'isSpectator': instance.isSpectator,
+  'totalScore': instance.totalScore,
+};
