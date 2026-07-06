@@ -217,7 +217,7 @@ class DisplayPictureScreen extends ConsumerWidget {
                     icon: const Icon(Icons.check_circle_outline),
                     label: const Text("Validate"),
                     onPressed: () {
-                      storage.uploadFile(file: File(imagePath), path: "image/$round.id/$round.id/$currentUserId.jpeg");
+                      storage.uploadFile(file: File(imagePath), path: "image/$room.id/$round.id/$currentUserId.jpeg");
                       Navigator.pushNamed(context, "/submissions/$id");
                     },
                   ),
