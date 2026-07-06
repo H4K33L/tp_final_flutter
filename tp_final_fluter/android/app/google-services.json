@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "376424754206",
+    "project_id": "ynovmobileapp",
+    "storage_bucket": "ynovmobileapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376424754206:android:5b8507eaeb13dd26ded20f",
+        "android_client_info": {
+          "package_name": "com.example.tp_final_fluter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLFp0ysAH4kXMkHpn-6Dqn9s5t7YaeifE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

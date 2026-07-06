@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tp_final_fluter/game_page.dart';
 import 'package:tp_final_fluter/not_found_page.dart';
 
+
+await Firebase.initializeApp(
+  options:DefaultFirebaseOptions.currentPlatform,
+)
 void main() {
   runApp(const MyApp());
 }
