@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FinishedWidget extends ConsumerWidget{
-  const FinishedWidget({super.key});
+  const FinishedWidget({super.key, required String roomId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

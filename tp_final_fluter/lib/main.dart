@@ -1,22 +1,22 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tp_final_fluter/firebase_options.dart';
 import 'package:tp_final_fluter/game_page.dart';
 import 'package:tp_final_fluter/not_found_page.dart';
 
 void main() async {
-  await Firebase.initializeApp(
-    options:DefaultFirebaseOptions.currentPlatform,
-  );
-
   WidgetsFlutterBinding.ensureInitialized();
 
-  final cameras = await availableCameras();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
+  final cameras = await availableCameras();
   final firstCamera = cameras.first;
 
-  runApp(MyApp(camera: firstCamera,));
+  runApp(ProviderScope(child: MyApp(camera: firstCamera)));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,19 +24,24 @@ class MyApp extends StatelessWidget {
 
   const MyApp({super.key, required this.camera});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'snap_theme',
+      debugShowCheckedModeBanner: false,
       routes: {
-      '/': (context) => MyHomePage(title: 'snap_theme main page',),
+        '/': (context) => const MyHomePage(title: 'snap_theme main page'),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/game') {
-          final args = ModalRoute.of(context)!.settings.arguments as GameRouteArgumment;
+          final args = settings.arguments as GameRouteArgumment;
           return MaterialPageRoute(
-            builder: (context) => GamePage(id: args.id, title: 'snap_theme game page', userName: args.username, camera: camera),
+            builder: (context) => GamePage(
+              id: args.id,
+              title: 'snap_theme game page',
+              userName: args.username,
+              camera: camera,
+            ),
           );
         }
         return null;
@@ -45,7 +50,7 @@ class MyApp extends StatelessWidget {
         return MaterialPageRoute(builder: (context) => NotFoundPage());
       },
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     );
   }
