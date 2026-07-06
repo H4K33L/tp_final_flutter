@@ -1,31 +1,22 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tp_final_fluter/firebase_options.dart';
 import 'package:tp_final_fluter/game_page.dart';
-import 'package:tp_final_fluter/models/player/player.dart';
 import 'package:tp_final_fluter/not_found_page.dart';
-import 'package:tp_final_fluter/providers/storageRepository.dart';
-import 'package:tp_final_fluter/services/player_service.dart';
-import 'package:tp_final_fluter/services/room_service.dart';
 
 void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   WidgetsFlutterBinding.ensureInitialized();
 
-  var cameras = await availableCameras();
+  final cameras = await availableCameras();
+
   final firstCamera = cameras.first;
-  await Firebase.initializeApp(
-    options:DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(ProviderScope(
-    child: MaterialApp(
-      title: "test",
-      home: Scaffold(
-        body: MyApp(camera: firstCamera,),
-      )
-    )));
+
+  runApp(MyApp(camera: firstCamera,));
 }
 
 
@@ -34,19 +25,24 @@ class MyApp extends StatelessWidget {
 
   const MyApp({super.key, required this.camera});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'snap_theme',
+      debugShowCheckedModeBanner: false,
       routes: {
-      '/': (context) => MyHomePage(title: 'snap_theme main page',),
+        '/': (context) => const MyHomePage(title: 'snap_theme main page'),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/game') {
-          final args = ModalRoute.of(context)!.settings.arguments as GameRouteArgumment;
+          final args = settings.arguments as GameRouteArgumment;
           return MaterialPageRoute(
-            builder: (context) => GamePage(id: args.id, title: 'snap_theme game page', userName: args.username, camera: camera),
+            builder: (context) => GamePage(
+              id: args.id,
+              title: 'snap_theme game page',
+              userName: args.username,
+              camera: camera,
+            ),
           );
         }
         return null;
@@ -55,7 +51,7 @@ class MyApp extends StatelessWidget {
         return MaterialPageRoute(builder: (context) => NotFoundPage());
       },
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
     );
   }
