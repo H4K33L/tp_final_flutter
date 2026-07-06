@@ -46,6 +46,9 @@ dependencies:
   firebase_core: ^4.11.0
   camera_platform_interface: ^2.13.0
   id_gen: ^0.7.8
+  firebase_storage: ^13.4.3
+  image_picker: ^1.2.3
+  photo_view: ^0.15.0
 
 dev_dependencies:
   flutter_test:

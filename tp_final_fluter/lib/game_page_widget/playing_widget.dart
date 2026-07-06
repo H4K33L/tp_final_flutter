@@ -5,24 +5,27 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
+import 'package:tp_final_fluter/firebase_repository.dart';
 
 class PlayingWidget extends ConsumerWidget{
-  const PlayingWidget({super.key, required this.id, required this.camera});
+  const PlayingWidget({super.key, required this.id, required this.camera, required this.themeName});
 
   final String id;
   final CameraDescription camera;
+  final String themeName;
   
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TakePictureScreen(id: id, camera: camera,);
+    return TakePictureScreen(id: id, camera: camera, themeName: themeName,);
   }
 }
 
 class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({super.key, required this.id, required this.camera});
+  const TakePictureScreen({super.key, required this.id, required this.camera, required this.themeName});
 
   final String id;
   final CameraDescription camera;
+  final String themeName;
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
@@ -74,6 +77,7 @@ class TakePictureScreenState extends State<PlayingWidget> {
             return Stack(
               fit: StackFit.expand,
               children: [
+                Text(widget.themeName),
                 CameraPreview(_controller),
                 Positioned(
                   top: 16,
@@ -131,14 +135,14 @@ class TakePictureScreenState extends State<PlayingWidget> {
   }
 }
 
-class DisplayPictureScreen extends StatelessWidget {
+class DisplayPictureScreen extends ConsumerWidget {
   final String id;
   final String imagePath;
   const DisplayPictureScreen({super.key, required this.id, required this.imagePath});
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final storage = ref.read(storageRepositoryProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
@@ -205,7 +209,10 @@ class DisplayPictureScreen extends StatelessWidget {
                     ),
                     icon: const Icon(Icons.check_circle_outline),
                     label: const Text("Validate"),
-                    onPressed: () {Navigator.pushNamed(context, "/submissions/$id");},
+                    onPressed: () {
+                      storage.uploadImage(file: File(imagePath), path: path)
+                      Navigator.pushNamed(context, "/submissions/$id");
+                    },
                   ),
                 ),
               ],

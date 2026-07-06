@@ -10,12 +10,14 @@ import 'package:tp_final_fluter/game_page_widget/waiting_widget.dart';
 import 'package:id_gen/id_gen.dart';
 
 class GamePage extends StatelessWidget {
-  const GamePage({super.key, required this.title, required this.id, required this.userName, required this.camera});
+  const GamePage({super.key, required this.title, required this.id, required this.userName, required this.camera, required this.themeName});
 
   final String title;
   final String id;
   final String userName;
   final CameraDescription camera;
+  final String themeName;
+
 @override
   Widget build(BuildContext context) {
     final colorScheme = ColorScheme.fromSeed(seedColor: Colors.deepPurple);
@@ -33,17 +35,18 @@ class GamePage extends StatelessWidget {
           centerTitle: true,
         ),
       ),
-      home: _GamePage(title: title, id: id, userName: userName, camera: camera,),
+      home: _GamePage(title: title, id: id, userName: userName, camera: camera, themeName: themeName),
     );
   }
 }
 
 class _GamePage extends ConsumerWidget  {
-  const _GamePage({required this.title, required this.id, required this.userName, required this.camera});
+  const _GamePage({required this.title, required this.id, required this.userName, required this.camera, required this.themeName});
   final String title;
   final String userName;
   final String id;
   final CameraDescription camera;
+  final String themeName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,7 +79,7 @@ class _GamePage extends ConsumerWidget  {
             // status: (params) => methode
             waiting: () =>  WaitingWidget(),
             starting: () => StartingWidget(),
-            playing: () => PlayingWidget(id: idRoom, camera: camera,),
+            playing: () => PlayingWidget(id: idRoom, camera: camera, themeName: themeName,),
             voting: () => VotingWidget(),
             results: () => ResultsWidget(),
             finished: () => FinishedWidget(),
