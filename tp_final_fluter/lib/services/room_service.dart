@@ -1,10 +1,11 @@
-// lib/services/room_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'firestore.dart';
 import '../models/room/room.dart';
 import '../models/player/player.dart';
+
+final roomRepositoryProvider = Provider((ref) => RoomService());
 
 class RoomService {
   final _auth = FirebaseAuth.instance;
@@ -37,7 +38,6 @@ class RoomService {
       displayName: displayName,
       isHost: true,
       isReady: false,
-      canCapture: true,
       isSpectator: false,
     );
     await playersRef(code).doc(uid).set(player);
@@ -73,7 +73,6 @@ class RoomService {
       displayName: displayName,
       isHost: false,
       isReady: false,
-      canCapture: true,
       isSpectator: false,
     );
     await playersRef(code).doc(uid).set(player);
@@ -85,5 +84,3 @@ class RoomService {
     return List.generate(6, (i) => chars[(rand + i * 37) % chars.length]).join();
   }
 }
-
-final roomServiceProvider = Provider((ref) => RoomService());

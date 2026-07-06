@@ -1,23 +1,24 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tp_final_fluter/firebase_options.dart';
 import 'package:tp_final_fluter/game_page.dart';
 import 'package:tp_final_fluter/not_found_page.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  WidgetsFlutterBinding.ensureInitialized();
+
   final cameras = await availableCameras();
+
   final firstCamera = cameras.first;
 
-  runApp(ProviderScope(child: MyApp(camera: firstCamera)));
+  runApp(MyApp(camera: firstCamera,));
 }
+
 
 class MyApp extends StatelessWidget {
   final CameraDescription camera;

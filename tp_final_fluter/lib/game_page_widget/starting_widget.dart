@@ -18,12 +18,7 @@ class StartingWidget extends ConsumerWidget{
       body: SafeArea(
         child: Column(
           children: [
-            for(String item in list) Text(item);
             TextField(controller: roundThemeControler),
-            FlatButton(
-              onPressed: () { },
-              child: Text('Launch round'),
-            );
           ],
         )
       )

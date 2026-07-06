@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'firestore.dart';
-import '../models/round/round.dart';
-import '../models/submission/submission.dart';
+
 import '../models/result/result.dart';
 import '../models/room/room.dart';
+import '../models/round/round.dart';
+import '../models/submission/submission.dart';
+import 'firestore.dart';
 
 class RoundService {
   /// Le host lance une nouvelle manche : choisit le thème, démarre le timer de 60s,

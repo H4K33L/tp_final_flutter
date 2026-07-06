@@ -17,11 +17,7 @@ class WaitingWidget extends ConsumerWidget{
       body: SafeArea(
         child: Column(
           children: [
-            for(String item in list) Text(item);
-            FlatButton(
-              onPressed: () { },
-              child: Text('Launch party'),
-            );
+              Text('Launch party'),
           ],
         )
       )

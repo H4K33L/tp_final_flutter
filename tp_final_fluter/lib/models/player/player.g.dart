@@ -11,7 +11,6 @@ _Player _$PlayerFromJson(Map<String, dynamic> json) => _Player(
   displayName: json['displayName'] as String,
   isHost: json['isHost'] as bool,
   isReady: json['isReady'] as bool,
-  canCapture: json['canCapture'] as bool,
   isSpectator: json['isSpectator'] as bool,
   totalScore: (json['totalScore'] as num?)?.toInt() ?? 0,
 );
@@ -20,7 +19,6 @@ Map<String, dynamic> _$PlayerToJson(_Player instance) => <String, dynamic>{
   'displayName': instance.displayName,
   'isHost': instance.isHost,
   'isReady': instance.isReady,
-  'canCapture': instance.canCapture,
   'isSpectator': instance.isSpectator,
   'totalScore': instance.totalScore,
 };
