@@ -5,7 +5,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
-import 'package:tp_final_fluter/firebase_repository.dart';
+import 'package:tp_final_fluter/providers/storageRepository.dart';
+import 'package:tp_final_fluter/providers/auth_providers.dart';
+import 'package:tp_final_fluter/providers/auth_providers.dart';
+import 'package:tp_final_fluter/providers/round_providers.dart';
+import 'package:tp_final_fluter/providers/room_providers.dart';
 
 class PlayingWidget extends ConsumerWidget{
   const PlayingWidget({super.key, required this.id, required this.camera, required this.themeName});
@@ -143,6 +147,9 @@ class DisplayPictureScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final storage = ref.read(storageRepositoryProvider);
+    final currentUserId = ref.watch(currentUserIdProvider);
+    final round = ref.watch(roundServiceProvider);
+    final room = ref.watch(roomServiceProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
@@ -210,7 +217,7 @@ class DisplayPictureScreen extends ConsumerWidget {
                     icon: const Icon(Icons.check_circle_outline),
                     label: const Text("Validate"),
                     onPressed: () {
-                      storage.uploadImage(file: File(imagePath), path: path)
+                      storage.uploadFile(file: File(imagePath), path: "image/$round.id/$round.id/$currentUserId.jpeg");
                       Navigator.pushNamed(context, "/submissions/$id");
                     },
                   ),
