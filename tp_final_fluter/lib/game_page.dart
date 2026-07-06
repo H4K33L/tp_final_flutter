@@ -49,6 +49,7 @@ class _GamePage extends ConsumerWidget  {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(gameControlerProvider);
     final notifier = ref.read(gameControlerProvider.notifier);
+    
     String idRoom = '';
     if (id == '0'){
       idRoom = UuidV4Gen().get();
