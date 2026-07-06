@@ -1,8 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tp_final_fluter/providers/room_providers.dart';
-import 'package:tp_final_fluter/providers/round_providers.dart';
 import 'package:tp_final_fluter/models/room/room.dart';
 import 'package:tp_final_fluter/models/round/round.dart';
 import 'package:tp_final_fluter/game_page_widget/finished_widget.dart';
@@ -11,6 +9,8 @@ import 'package:tp_final_fluter/game_page_widget/result_widjet.dart';
 import 'package:tp_final_fluter/game_page_widget/starting_widget.dart';
 import 'package:tp_final_fluter/game_page_widget/voting_widjet.dart';
 import 'package:tp_final_fluter/game_page_widget/waiting_widget.dart';
+import 'package:tp_final_fluter/repositories/room_repository.dart';
+import 'package:tp_final_fluter/repositories/round_repository.dart';
 
 class GamePage extends ConsumerStatefulWidget {
   const GamePage({
@@ -41,7 +41,7 @@ class _GamePageState extends ConsumerState<GamePage> {
   }
 
   Future<void> _setupRoom() async {
-    final service = ref.read(roomServiceProvider);
+    final service = ref.read(roomRepositoryProvider);
     try {
       final String finalRoomId;
       if (widget.id == '0') {
@@ -112,7 +112,7 @@ class RoundRouter extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final roundAsync = ref.watch(currentRoundStreamProvider(roomId));
+    final roundAsync = ref.watch(roundstreamProvider(roomId));
 
     return roundAsync.when(
       data: (round) {

@@ -1,12 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tp_final_fluter/models/result/result.dart';
+import 'package:tp_final_fluter/models/room/room.dart';
+import 'package:tp_final_fluter/models/round/round.dart';
+import 'package:tp_final_fluter/models/submission/submission.dart';
+import 'package:tp_final_fluter/providers/auth_provider.dart';
+import 'package:tp_final_fluter/services/firestore.dart';
 
-import '../models/result/result.dart';
-import '../models/room/room.dart';
-import '../models/round/round.dart';
-import '../models/submission/submission.dart';
-import 'firestore.dart';
+final roundsRepositoryProvider = Provider((ref) => RoundsRepository(ref.watch(firestoreProvider)));
 
-class RoundService {
+final roundstreamProvider = StreamProvider.family<Round?, ({String idRoom, String idRound})>((ref, params) {
+  return ref.watch(roundsRepositoryProvider).watchRound(idRoom: params.idRoom, idRound: params.idRound);
+});
+
+class RoundsRepository {
+  final FirebaseFirestore _db;
+  RoundsRepository(this._db);
+
+  CollectionReference<Map<String, dynamic>> get _rooms => _db.collection('rooms');
+  
   /// Le host lance une nouvelle manche : choisit le thème, démarre le timer de 60s,
   /// et fait passer la room en "playing".
   Future<void> startRound({
@@ -120,4 +132,16 @@ class RoundService {
   int computeThemeMasterIndex({required int roundNumber, required int playerCount}) {
     return roundNumber % playerCount;
   }
+
+  Stream<Round?> watchRound({required String idRoom, required String idRound}) {
+    return _rooms.doc(idRoom)
+      .collection('rounds')
+      .doc(idRound)
+      .snapshots()
+      .map((doc) {
+        if (!doc.exists) return null;
+        return Round.fromJson(doc.data()!);
+      });
+  }
+
 }

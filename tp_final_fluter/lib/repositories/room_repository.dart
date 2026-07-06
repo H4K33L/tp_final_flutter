@@ -1,15 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'firestore.dart';
+import 'package:tp_final_fluter/providers/auth_provider.dart';
+import 'package:tp_final_fluter/services/firestore.dart';
 import '../models/room/room.dart';
 import '../models/player/player.dart';
 
-final roomRepositoryProvider = Provider((ref) => RoomService());
+final roomRepositoryProvider = Provider((ref) => RoomService(ref.watch(firestoreProvider)));
+
+final roomStreamProvider = StreamProvider.family<Room?, String>((ref, code) {
+  return ref.watch(roomRepositoryProvider).watchRoom(code);
+});
 
 class RoomService {
   final _auth = FirebaseAuth.instance;
-
+  final FirebaseFirestore _db;
+  RoomService(this._db);
+  
   /// Crée une nouvelle room, l'utilisateur courant devient host.
   /// Retourne le code de la room créée.
   Future<String> createRoom({required String displayName}) async {
@@ -82,5 +89,15 @@ class RoomService {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final rand = DateTime.now().microsecondsSinceEpoch;
     return List.generate(6, (i) => chars[(rand + i * 37) % chars.length]).join();
+  }
+
+   Stream<Room?> watchRoom(String code) {
+    return _db.collection('rooms')
+      .doc(code)
+      .snapshots()
+      .map((doc) {
+        if (!doc.exists) return null;
+        return Room.fromJson(doc.data()!);
+      });
   }
 }

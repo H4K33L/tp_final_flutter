@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tp_final_fluter/models/vote/vote.dart';
-import 'package:tp_final_fluter/services/auth_provider.dart';
+import 'package:tp_final_fluter/providers/auth_provider.dart';
+import 'package:tp_final_fluter/services/firestore.dart';
 
 final votesRepositoryProvider = Provider((ref) => VotesRepository(ref.watch(firestoreProvider)));
 
@@ -50,5 +51,29 @@ class VotesRepository {
         if (!doc.exists) return null;
         return Vote.fromJson(doc.data()!);
       });
+  }
+
+  Future<void> submitVote({
+    required String roomId,
+    required int roundNumber,
+    required String voterId,
+    required String votedForPlayerId,
+  }) async {
+    if (voterId == votedForPlayerId) {
+      throw Exception('Impossible de voter pour soi-même');
+    }
+
+    final existing = await votesRef(roomId, roundNumber).doc(voterId).get();
+    if (existing.exists) {
+      throw Exception('Vous avez déjà voté pour cette manche');
+    }
+
+    final vote = Vote(
+      id: voterId,
+      votedForPlayerId: votedForPlayerId,
+      votedAt: DateTime.now(),
+    );
+
+    await votesRef(roomId, roundNumber).doc(voterId).set(vote);
   }
 }
