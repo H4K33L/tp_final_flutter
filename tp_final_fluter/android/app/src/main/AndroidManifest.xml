@@ -1,4 +1,13 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- Suppress microphone permission injected by the camera plugin — audio is not needed -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
+    <!-- Storage permissions: READ_MEDIA_IMAGES for API 33+, READ_EXTERNAL_STORAGE for older -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <application
         android:label="tp_final_fluter"
         android:name="${applicationName}"

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -87,8 +88,20 @@ class RoomService {
 
   String _generateCode() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    final rand = DateTime.now().microsecondsSinceEpoch;
-    return List.generate(6, (i) => chars[(rand + i * 37) % chars.length]).join();
+    final rand = Random.secure();
+    return List.generate(6, (_) => chars[rand.nextInt(chars.length)]).join();
+  }
+
+  Future<void> setStatusStarting(String roomId) async {
+    await roomsRef().doc(roomId).update({'status': RoomStatus.starting.name});
+  }
+
+  Future<void> startNextRound(String roomId) async {
+    await roomsRef().doc(roomId).update({'status': RoomStatus.starting.name});
+  }
+
+  Future<void> endGame(String roomId) async {
+    await roomsRef().doc(roomId).update({'status': RoomStatus.finished.name});
   }
 
    Stream<Room?> watchRoom(String code) {
@@ -97,7 +110,7 @@ class RoomService {
       .snapshots()
       .map((doc) {
         if (!doc.exists) return null;
-        return Room.fromJson(doc.data()!);
+        return Room.fromJson({'id': doc.id, ...doc.data()!});
       });
   }
 }

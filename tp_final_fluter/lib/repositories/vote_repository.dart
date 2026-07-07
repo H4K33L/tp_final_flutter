@@ -10,6 +10,20 @@ final votestreamProvider = StreamProvider.family<Vote?, ({String idRoom, String 
   return ref.watch(votesRepositoryProvider).watchVote(idRoom: params.idRoom, idRound: params.idRound, idPlayer: params.idPlayer);
 });
 
+final allVotesForRoundStreamProvider = StreamProvider.family<List<Vote>, ({String roomId, int roundNumber})>((ref, params) {
+  return ref.watch(votesRepositoryProvider).watchVotesForRound(
+    idRoom: params.roomId,
+    idRound: params.roundNumber.toString(),
+  );
+});
+
+final hasVotedProvider = Provider.family<bool, ({String roomId, int roundNumber})>((ref, params) {
+  final uid = ref.watch(currentUserIdProvider);
+  if (uid == null) return false;
+  final votesAsync = ref.watch(allVotesForRoundStreamProvider(params));
+  return votesAsync.value?.any((v) => v.id == uid) ?? false;
+});
+
 class VotesRepository {
   final FirebaseFirestore _db;
   VotesRepository(this._db);
@@ -49,8 +63,17 @@ class VotesRepository {
       .snapshots()
       .map((doc) {
         if (!doc.exists) return null;
-        return Vote.fromJson(doc.data()!);
+        return Vote.fromJson({'id': doc.id, ...doc.data()!});
       });
+  }
+
+  Stream<List<Vote>> watchVotesForRound({required String idRoom, required String idRound}) {
+    return _rooms.doc(idRoom)
+      .collection('rounds')
+      .doc(idRound)
+      .collection('votes')
+      .snapshots()
+      .map((snap) => snap.docs.map((doc) => Vote.fromJson({'id': doc.id, ...doc.data()})).toList());
   }
 
   Future<void> submitVote({

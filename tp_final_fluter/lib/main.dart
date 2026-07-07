@@ -1,27 +1,34 @@
 import 'package:camera/camera.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tp_final_fluter/firebase_options.dart';
 import 'package:tp_final_fluter/game_page.dart';
 import 'package:tp_final_fluter/not_found_page.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  WidgetsFlutterBinding.ensureInitialized();
+  // Sign in anonymously so currentUser is never null.
+  // Firebase reuses the same UID across launches on the same device.
+  if (FirebaseAuth.instance.currentUser == null) {
+    await FirebaseAuth.instance.signInAnonymously();
+  }
 
   final cameras = await availableCameras();
+  final firstCamera = cameras.isNotEmpty ? cameras.first : null;
 
-  final firstCamera = cameras.first;
-
-  runApp(MyApp(camera: firstCamera,));
+  runApp(ProviderScope(child: MyApp(camera: firstCamera)));
 }
 
 
 class MyApp extends StatelessWidget {
-  final CameraDescription camera;
+  final CameraDescription? camera;
 
   const MyApp({super.key, required this.camera});
 
@@ -39,9 +46,8 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) => GamePage(
               id: args.id,
-              title: 'snap_theme game page',
               userName: args.username,
-              camera: camera, themeName: '',
+              camera: camera,
             ),
           );
         }
@@ -67,12 +73,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _userNameController = TextEditingController();
+  final _roomIdController = TextEditingController();
+
+  @override
+  void dispose() {
+    _userNameController.dispose();
+    _roomIdController.dispose();
+    super.dispose();
+  }
+
+  void _showError(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final roomIdControler = TextEditingController();
-    final userNameControler = TextEditingController();
-
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -121,7 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: TextField(
-                        controller: userNameControler,
+                        controller: _userNameController,
+                        textCapitalization: TextCapitalization.words,
                         decoration: const InputDecoration(
                           labelText: 'Votre pseudo',
                           prefixIcon: Icon(Icons.person_outline),
@@ -160,9 +179,15 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             icon: const Icon(Icons.add_circle_outline),
-                            label: const Text('Create a room'),
+                            label: const Text('Créer la room'),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/game',arguments:  GameRouteArgumment(id: '0',username: userNameControler.value.text));
+                              final name = _userNameController.text.trim();
+                              if (name.isEmpty) {
+                                _showError(context, 'Entrez un pseudo avant de créer une room.');
+                                return;
+                              }
+                              Navigator.pushNamed(context, '/game',
+                                  arguments: GameRouteArgumment(id: '0', username: name));
                             },
                           ),
                         ],
@@ -188,9 +213,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           const SizedBox(height: 12),
                           TextField(
-                            controller: roomIdControler,
+                            controller: _roomIdController,
+                            textCapitalization: TextCapitalization.characters,
                             decoration: const InputDecoration(
-                              labelText: 'Room ID',
+                              labelText: 'Code de la room',
                               prefixIcon: Icon(Icons.meeting_room_outlined),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -208,9 +234,20 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                             icon: const Icon(Icons.login),
-                            label: const Text('Join'),
+                            label: const Text('Rejoindre'),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/game',arguments: GameRouteArgumment(id: roomIdControler.value.text,username: userNameControler.value.text));
+                              final name = _userNameController.text.trim();
+                              final code = _roomIdController.text.trim().toUpperCase();
+                              if (name.isEmpty) {
+                                _showError(context, 'Entrez un pseudo avant de rejoindre.');
+                                return;
+                              }
+                              if (code.isEmpty) {
+                                _showError(context, 'Entrez le code de la room.');
+                                return;
+                              }
+                              Navigator.pushNamed(context, '/game',
+                                  arguments: GameRouteArgumment(id: code, username: name));
                             },
                           ),
                         ],

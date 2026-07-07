@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // True if the calling user is in the room's players sub-collection.
+    function isRoomMember(roomId) {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/rooms/$(roomId)/players/$(request.auth.uid));
+    }
+
+    // True if the calling user is the room's host.
+    function isRoomHost(roomId) {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/rooms/$(roomId)).data.hostId == request.auth.uid;
+    }
+
+    // ── Rooms ─────────────────────────────────────────────────────────────────
+    match /rooms/{roomId} {
+      // Any authenticated user can read a room they belong to.
+      allow read: if isRoomMember(roomId);
+      // Any authenticated user can create a room (they become host).
+      allow create: if isSignedIn();
+      // Only the host can update room-level fields (status, currentRound, etc.).
+      allow update: if isRoomHost(roomId);
+      allow delete: if isRoomHost(roomId);
+
+      // ── Players ─────────────────────────────────────────────────────────────
+      match /players/{playerId} {
+        allow read: if isRoomMember(roomId);
+        // A player can only create / update / delete their own document.
+        allow create: if isSignedIn() && request.auth.uid == playerId;
+        allow update: if isSignedIn() && request.auth.uid == playerId;
+        allow delete: if isSignedIn() && request.auth.uid == playerId;
+      }
+
+      // ── Rounds ──────────────────────────────────────────────────────────────
+      match /rounds/{roundId} {
+        allow read: if isRoomMember(roomId);
+        // Only the host can create or update a round.
+        allow create, update: if isRoomHost(roomId);
+
+        // ── Submissions ───────────────────────────────────────────────────────
+        match /submissions/{playerId} {
+          allow read: if isRoomMember(roomId);
+          // A player can only submit their own photo, and only once.
+          allow create: if isSignedIn()
+            && request.auth.uid == playerId
+            && !exists(/databases/$(database)/documents/rooms/$(roomId)/rounds/$(roundId)/submissions/$(playerId));
+        }
+
+        // ── Votes ─────────────────────────────────────────────────────────────
+        match /votes/{voterId} {
+          allow read: if isRoomMember(roomId);
+          // A player can only cast one vote, for someone other than themselves.
+          allow create: if isSignedIn()
+            && request.auth.uid == voterId
+            && request.resource.data.votedForPlayerId != voterId
+            && !exists(/databases/$(database)/documents/rooms/$(roomId)/rounds/$(roundId)/votes/$(voterId));
+        }
+
+        // ── Results ───────────────────────────────────────────────────────────
+        match /results/{playerId} {
+          allow read: if isRoomMember(roomId);
+          // Results are written by the host after vote closes.
+          allow write: if isRoomHost(roomId);
+        }
+      }
+    }
+  }
+}

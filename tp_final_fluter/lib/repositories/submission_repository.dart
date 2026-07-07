@@ -9,6 +9,13 @@ final submissionStreamProvider = StreamProvider.family<Submission?, ({String idR
   return ref.watch(submissionsRepositoryProvider).watchSubmission(idRoom: params.idRoom, idRound: params.idRound, idPlayer: params.idPlayer);
 });
 
+final allSubmissionsForRoundStreamProvider = StreamProvider.family<List<Submission>, ({String roomId, int roundNumber})>((ref, params) {
+  return ref.watch(submissionsRepositoryProvider).watchAllSubmissions(
+    idRoom: params.roomId,
+    idRound: params.roundNumber.toString(),
+  );
+});
+
 class SubmissionsRepository {
   final FirebaseFirestore _db;
   SubmissionsRepository(this._db);
@@ -48,7 +55,18 @@ class SubmissionsRepository {
       .snapshots()
       .map((doc) {
         if (!doc.exists) return null;
-        return Submission.fromJson(doc.data()!);
+        return Submission.fromJson({'id': doc.id, ...doc.data()!});
       });
+  }
+
+  Stream<List<Submission>> watchAllSubmissions({required String idRoom, required String idRound}) {
+    return _rooms.doc(idRoom)
+      .collection('rounds')
+      .doc(idRound)
+      .collection('submissions')
+      .snapshots()
+      .map((snap) => snap.docs
+          .map((doc) => Submission.fromJson({'id': doc.id, ...doc.data()}))
+          .toList());
   }
 }

@@ -15,18 +15,14 @@ import 'package:tp_final_fluter/game_page_widget/result_widget.dart';
 class GamePage extends ConsumerStatefulWidget {
   const GamePage({
     super.key,
-    required this.title,
     required this.id,
     required this.userName,
     required this.camera,
-    required this.themeName
   });
 
-  final String title;
   final String id;
   final String userName;
-  final CameraDescription camera;
-  final String themeName;
+  final CameraDescription? camera;
 
   @override
   ConsumerState<GamePage> createState() => _GamePageState();
@@ -60,27 +56,47 @@ class _GamePageState extends ConsumerState<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title), elevation: 0),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: _error != null
-              ? Center(child: Text('Erreur: $_error'))
-              : roomId == null
-                  ? const Center(child: CircularProgressIndicator())
-                  : RoomRouter(roomId: roomId!, camera: widget.camera, themeName: widget.themeName,),
+    if (_error != null) {
+      return Scaffold(
+        appBar: AppBar(elevation: 0),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                Text(
+                  _error!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text('Retour'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    }
+    if (roomId == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+    return RoomRouter(roomId: roomId!, camera: widget.camera);
   }
 }
 
 class RoomRouter extends ConsumerWidget {
-  const RoomRouter({required this.roomId, required this.camera, required this.themeName ,super.key});
+  const RoomRouter({required this.roomId, required this.camera, super.key});
   final String roomId;
-  final CameraDescription camera;
-  final String themeName;
+  final CameraDescription? camera;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -94,7 +110,11 @@ class RoomRouter extends ConsumerWidget {
         return switch (room.status) {
           RoomStatus.waiting  => WaitingWidget(roomId: roomId),
           RoomStatus.starting => StartingWidget(roomId: roomId),
-          RoomStatus.playing  => RoundRouter(roomId: roomId, camera: camera, themeName: themeName),
+          RoomStatus.playing  => RoundRouter(
+              roomId: roomId,
+              roundNumber: room.currentRound,
+              camera: camera,
+            ),
           RoomStatus.results  => ResultsWidget(roomId: roomId),
           RoomStatus.finished => FinishedWidget(roomId: roomId),
         };
@@ -105,17 +125,22 @@ class RoomRouter extends ConsumerWidget {
   }
 }
 
-/// Niveau 2 : route sur RoundStatus (capturing, voting, closed) — actif seulement
-/// pendant RoomStatus.playing, puisque Room.status ne suit pas les sous-phases.
 class RoundRouter extends ConsumerWidget {
-  const RoundRouter({required this.roomId, required this.camera, required this.themeName, super.key});
+  const RoundRouter({
+    required this.roomId,
+    required this.roundNumber,
+    required this.camera,
+    super.key,
+  });
   final String roomId;
-  final CameraDescription camera;
-  final String themeName;
+  final int roundNumber;
+  final CameraDescription? camera;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final roundAsync = ref.watch(roundstreamProvider(roomId));
+    final roundAsync = ref.watch(
+      roundstreamProvider((idRoom: roomId, idRound: roundNumber.toString())),
+    );
 
     return roundAsync.when(
       data: (round) {
@@ -123,8 +148,13 @@ class RoundRouter extends ConsumerWidget {
           return const Center(child: Text('Manche introuvable'));
         }
         return switch (round.status) {
-          RoundStatus.capturing => PlayingWidget(id: roomId, camera: camera, themeName: themeName),
-          RoundStatus.voting    => VotingGallery(roomId: roomId, roundNumber: int.parse(round.id)),
+          RoundStatus.capturing => PlayingWidget(
+              roomId: roomId,
+              camera: camera,
+              roundNumber: roundNumber,
+              endsAt: round.endsAt,
+            ),
+          RoundStatus.voting    => VotingGallery(roomId: roomId, roundNumber: roundNumber),
           RoundStatus.closed    => const Center(child: CircularProgressIndicator()),
         };
       },

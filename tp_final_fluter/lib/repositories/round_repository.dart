@@ -134,14 +134,14 @@ class RoundsRepository {
   }
 
   Stream<Round?> watchRound({required String idRoom, required String idRound}) {
-    return _rooms.doc(idRoom)
-      .collection('rounds')
-      .doc(idRound)
-      .snapshots()
-      .map((doc) {
-        if (!doc.exists) return null;
-        return Round.fromJson(doc.data()!);
-      });
+  return _rooms.doc(idRoom)
+    .collection('rounds')
+    .doc(idRound)
+    .snapshots()
+    .map((doc) {
+      if (!doc.exists) return null;
+      return Round.fromJson({'id': doc.id, ...doc.data()!});
+    });
   }
 
 }

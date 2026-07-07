@@ -43,7 +43,7 @@ class PlayerRepository {
         .snapshots()
         .map((doc) {
       if (!doc.exists) return null;
-      return Player.fromJson({'id': doc.id, ...doc.data()!}); // fix: id injecté
+      return Player.fromJson({'id': doc.id, ...doc.data()!});
     });
   }
 

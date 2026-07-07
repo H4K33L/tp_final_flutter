@@ -2,6 +2,13 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+final photosStreamProvider = StreamProvider.family<List<StorageImage>, ({String roomId, int roundNumber})>((ref, params) {
+  final service = ref.watch(storageRepositoryProvider);
+  return Stream.fromFuture(
+    service.listImagesInFolder('rooms/${params.roomId}/rounds/${params.roundNumber}'),
+  );
+});
+
 /// Représente une image récupérée depuis Firebase Storage.
 class StorageImage {
   final String name;
@@ -128,23 +135,4 @@ class StorageService {
       throw Exception('Erreur suppression (${e.code}): ${e.message}');
     }
   }
-}
-
-
-
-final storageServiceProvider = Provider<StorageService>((ref) => StorageService());
-
-/// Récupère les photos de la manche depuis Storage.
-/// Le playerId est déduit du nom de fichier (ex: "player123.jpeg" -> "player123")
-final photosStreamProvider = FutureProvider.family<List<StorageImage>, ({String roomId, int roundNumber})>(
-  (ref, args) async {
-    final storageService = ref.watch(storageServiceProvider);
-    return storageService.listImagesInFolder('image/${args.roomId}/${args.roundNumber}');
-  },
-);
-
-/// Extrait le playerId à partir du nom de fichier d'une StorageImage
-String playerIdFromStorageImage(StorageImage image) {
-  final dotIndex = image.name.lastIndexOf('.');
-  return dotIndex == -1 ? image.name : image.name.substring(0, dotIndex);
 }

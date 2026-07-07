@@ -48,7 +48,7 @@ class ResultsRepository {
       .snapshots()
       .map((doc) {
         if (!doc.exists) return null;
-        return Result.fromJson(doc.data()!);
+        return Result.fromJson({'id': doc.id, ...doc.data()!});
       });
   }
 }
